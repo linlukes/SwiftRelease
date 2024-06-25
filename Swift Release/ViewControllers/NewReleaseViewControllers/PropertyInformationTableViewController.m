@@ -191,7 +191,7 @@
     }
     MBProgressHUD *progressHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     progressHUD.mode = MBProgressHUDModeIndeterminate;
-    progressHUD.dimBackground = YES;
+//    progressHUD.dimBackground = YES;
     
     [geocoder reverseGeocodeLocation:currentLocation completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
         

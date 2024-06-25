@@ -6,8 +6,8 @@ target 'Swift Release' do
   # use_frameworks!
 
   # Pods for Swift Release
-	pod 'MBProgressHUD', '~> 0.9.1'
-	pod 'ActionSheetPicker-3.0', '~> 2.0.3'
+	pod 'MBProgressHUD', '~> 1.2'
+	pod 'ActionSheetPicker-3.0', '~> 2.7'
 
   target 'Swift ReleaseTests' do
     inherit! :search_paths

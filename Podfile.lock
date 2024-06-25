@@ -1,0 +1,20 @@
+PODS:
+  - ActionSheetPicker-3.0 (2.7.4)
+  - MBProgressHUD (1.2.0)
+
+DEPENDENCIES:
+  - ActionSheetPicker-3.0 (~> 2.7)
+  - MBProgressHUD (~> 1.2)
+
+SPEC REPOS:
+  trunk:
+    - ActionSheetPicker-3.0
+    - MBProgressHUD
+
+SPEC CHECKSUMS:
+  ActionSheetPicker-3.0: a380d57270b6b2d321c4add024ba5c466a7f5cfd
+  MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
+
+PODFILE CHECKSUM: be14c26aee323c1bb64193f2a5821e2d58bb30e1
+
+COCOAPODS: 1.15.2
