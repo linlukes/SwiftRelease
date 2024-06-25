@@ -127,43 +127,34 @@
 {
     [AudioPlayer playButtonEffectSound];
 
-    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
-    {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Select a Photo" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Select a Photo" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    // if ipad
+    alert.popoverPresentationController.sourceView = self.btnLogoChange;
+    alert.popoverPresentationController.sourceRect = CGRectMake(self.btnLogoChange.bounds.size.width/2.0f, self.btnLogoChange.bounds.size.height/2.0f, 1, 1);
+    ///
+    
+    UIAlertAction *cameraAction = [UIAlertAction actionWithTitle:@"Take a Photo" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSLog(@"Take a Photo");
+        [AudioPlayer playButtonEffectSound];
+        [self takePhoto];
         
-        // if ipad
-        alert.popoverPresentationController.sourceView = self.btnLogoChange;
-        alert.popoverPresentationController.sourceRect = CGRectMake(self.btnLogoChange.bounds.size.width/2.0f, self.btnLogoChange.bounds.size.height/2.0f, 1, 1);
-        ///
-        
-        UIAlertAction *cameraAction = [UIAlertAction actionWithTitle:@"Take a Photo" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            NSLog(@"Take a Photo");
-            [AudioPlayer playButtonEffectSound];
-            [self takePhoto];
-            
-        }];
-        [alert addAction:cameraAction];
-        
-        UIAlertAction *galleryAction = [UIAlertAction actionWithTitle:@"Get From Photo Library" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            NSLog(@"Get from a photo library");
-            [AudioPlayer playButtonEffectSound];
-            [self selectPhoto];
-        }];
-        [alert addAction:galleryAction];
-        
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action)
-                                       {
-                                           NSLog(@"Cancel action");
-                                       }];
-        [alert addAction:cancelAction];
-        [self presentViewController:alert animated:YES completion:nil];
-    }
-    else
-    {
-        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Select a Photo" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Take a Photo", @"Get From Photo Library", nil];
-        
-        [actionSheet showInView:self.view];
-    }
+    }];
+    [alert addAction:cameraAction];
+    
+    UIAlertAction *galleryAction = [UIAlertAction actionWithTitle:@"Get From Photo Library" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSLog(@"Get from a photo library");
+        [AudioPlayer playButtonEffectSound];
+        [self selectPhoto];
+    }];
+    [alert addAction:galleryAction];
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action)
+                                   {
+                                       NSLog(@"Cancel action");
+                                   }];
+    [alert addAction:cancelAction];
+    [self presentViewController:alert animated:YES completion:nil];
     
 }
 
@@ -215,24 +206,6 @@
     [self.btnSignDelete setHidden:YES];
 }
 
-#pragma mark - actionSheet delegate
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    
-    if (buttonIndex == 0)
-    {
-        [AudioPlayer playDeleteEffectSound];
-        [self takePhoto];
-    }
-    else if (buttonIndex == 1)
-    {
-        [AudioPlayer playDeleteEffectSound];
-        [self selectPhoto];
-    }
-    
-}
-
 #pragma mark - imagePicker
 
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
@@ -278,18 +251,11 @@
 // show alert
 -(void)showDefaultAlert:(NSString*)title message:(NSString*)message
 {
-    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
-    {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:nil];
-        [alert addAction:defaultAction];
-        [self presentViewController:alert animated:YES completion:nil];
-    }
-    else
-    {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [alert show];
-    }
+    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:nil];
+    [alert addAction:defaultAction];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 #pragma mark -  SignDelegate

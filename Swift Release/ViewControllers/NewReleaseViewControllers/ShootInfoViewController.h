@@ -11,17 +11,19 @@
 
 
 @interface ShootInfoViewController : UITableViewController <UITextFieldDelegate, CLLocationManagerDelegate>
-{
-    UIDatePicker *datePicker;
-    
-    CLLocationManager *locationManager;
-    
-    CLLocation *currentLocation;
-    
-    NSString *m_strLatitude, *m_strLongitude, *m_strCity, *m_strState, *m_strCountry;
-    
-    BOOL m_bAvailableGPS;
-}
+
+@property (strong, nonatomic) UIDatePicker *datePicker;
+@property (strong, nonatomic) CLLocationManager *locationManager;
+@property (strong, nonatomic) CLLocation *currentLocation;
+@property (strong, nonatomic) NSString *m_strLatitude;
+@property (strong, nonatomic) NSString *m_strLongitude;
+@property (strong, nonatomic) NSString *m_strCity;
+@property (strong, nonatomic) NSString *m_strState;
+@property (strong, nonatomic) NSString *m_strCountry;
+@property (assign, nonatomic) BOOL m_bAvailableGPS;
+
+@property (strong, nonatomic) CLGeocoder *geocoder;
+@property (strong, nonatomic) CLPlacemark *placemark;
 
 // input fields....
 @property (weak, nonatomic) IBOutlet UITextField *txtPhotographerName;

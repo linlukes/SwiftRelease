@@ -73,43 +73,32 @@
 {
     [AudioPlayer playButtonEffectSound];
     
-    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
-    {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Ownership Type" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-        
-        /****** if ipad ***********************/
-        alert.popoverPresentationController.sourceView = self.btnOwnerType;
-        alert.popoverPresentationController.sourceRect = CGRectMake(self.btnOwnerType.bounds.size.width - 80, self.btnOwnerType.bounds.size.height / 2.0f, 1, 1);
-        /**********************/
-        
-        UIAlertAction *individualAction = [UIAlertAction actionWithTitle:@"Individual Owner" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [self.btnOwnerType setTitle:@"Individual Owner" forState:UIControlStateNormal];
-            
-        }];
-        [alert addAction:individualAction];
-        
-        UIAlertAction *corporateAction = [UIAlertAction actionWithTitle:@"Corporate Owner" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [self.btnOwnerType setTitle:@"Corporate Owner" forState:UIControlStateNormal];
-            
-        }];
-        [alert addAction:corporateAction];
-        
-        UIAlertAction *authorizedAction = [UIAlertAction actionWithTitle:@"Authorized Representative" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [self.btnOwnerType setTitle:@"Authorized Representative" forState:UIControlStateNormal];
-            
-        }];
-        [alert addAction:authorizedAction];
-        
-        [self presentViewController:alert animated:YES completion:nil];
-        
-        
-    }
-    else
-    {
-        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Ownership Information" delegate:(id<UIActionSheetDelegate>)self.btnOwnerType cancelButtonTitle:nil destructiveButtonTitle:@"Individual Owner" otherButtonTitles:@"Corporate Owner", @"Authorized Representative", nil];
-        [actionSheet showInView:self.view];
-    }
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Ownership Type" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     
+    /****** if ipad ***********************/
+    alert.popoverPresentationController.sourceView = self.btnOwnerType;
+    alert.popoverPresentationController.sourceRect = CGRectMake(self.btnOwnerType.bounds.size.width - 80, self.btnOwnerType.bounds.size.height / 2.0f, 1, 1);
+    /**********************/
+    
+    UIAlertAction *individualAction = [UIAlertAction actionWithTitle:@"Individual Owner" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [self.btnOwnerType setTitle:@"Individual Owner" forState:UIControlStateNormal];
+        
+    }];
+    [alert addAction:individualAction];
+    
+    UIAlertAction *corporateAction = [UIAlertAction actionWithTitle:@"Corporate Owner" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [self.btnOwnerType setTitle:@"Corporate Owner" forState:UIControlStateNormal];
+        
+    }];
+    [alert addAction:corporateAction];
+    
+    UIAlertAction *authorizedAction = [UIAlertAction actionWithTitle:@"Authorized Representative" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [self.btnOwnerType setTitle:@"Authorized Representative" forState:UIControlStateNormal];
+        
+    }];
+    [alert addAction:authorizedAction];
+    
+    [self presentViewController:alert animated:YES completion:nil];
     
 }
 
@@ -188,43 +177,14 @@
 // show alert
 -(void)showDefaultAlert:(NSString*)title message:(NSString*)message
 {
-    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
-    {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:nil];
-        [alert addAction:defaultAction];
-        [self presentViewController:alert animated:YES completion:nil];
-    }
-    else
-    {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [alert show];
-    }
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:nil];
+    [alert addAction:defaultAction];
+    [self presentViewController:alert animated:YES completion:nil];
+
 }
 
 
-
-
-#pragma mark - actionSheet delegate
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    
-    if (buttonIndex == 0) {
-        [self.btnOwnerType setTitle:@"Individual Owner" forState:UIControlStateNormal];
-    }
-    else if (buttonIndex == 1)
-    {
-        [self.btnOwnerType setTitle:@"Corporate Owner" forState:UIControlStateNormal];
-        
-    }
-    else if (buttonIndex == 2)
-    {
-        [self.btnOwnerType setTitle:@"Authorized Representative" forState:UIControlStateNormal];
-        
-    }
-    
-}
 
 
 #pragma mark - textView delegate

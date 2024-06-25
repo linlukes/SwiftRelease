@@ -16,8 +16,7 @@
 
 @interface ShootInfoViewController ()
 {
-    CLGeocoder *geocoder;
-    CLPlacemark *placemark;
+    
 }
 @end
 
@@ -26,16 +25,16 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    geocoder = [[CLGeocoder alloc] init];
-    if (locationManager == nil)
+    self.geocoder = [[CLGeocoder alloc] init];
+    if (self.locationManager == nil)
     {
-        locationManager = [[CLLocationManager alloc] init];
-        locationManager.delegate = self;
-        locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
+        self.locationManager = [[CLLocationManager alloc] init];
+        self.locationManager.delegate = self;
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
     }
     
-    [locationManager requestAlwaysAuthorization];
-    [locationManager startUpdatingLocation];
+    [self.locationManager requestAlwaysAuthorization];
+    [self.locationManager startUpdatingLocation];
     
     self.btnDate.clipsToBounds = YES;
     
@@ -108,11 +107,11 @@
 
 -(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations
 {
-    currentLocation = [locations lastObject];
+    self.currentLocation = [locations lastObject];
     
-    NSLog(@"%f %f", currentLocation.coordinate.longitude, currentLocation.coordinate.latitude);
+    NSLog(@"%f %f", self.currentLocation.coordinate.longitude, self.currentLocation.coordinate.latitude);
 
-    m_bAvailableGPS = YES;
+    self.m_bAvailableGPS = YES;
     // Turn off the location manager to save power.
     [manager stopUpdatingLocation];
 }
@@ -120,7 +119,7 @@
 -(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
     NSLog(@"Cannot find the location.");
-    m_bAvailableGPS = NO;
+    self.m_bAvailableGPS = NO;
 }
 
 
@@ -201,70 +200,59 @@
     
     // Make a frame for the picker & then create the picker
     CGRect pickerFrame = CGRectMake(0, 0, self.view.frame.size.width, 200);
-    datePicker = [[UIDatePicker alloc] initWithFrame:pickerFrame];
+    self.datePicker = [[UIDatePicker alloc] initWithFrame:pickerFrame];
     
-    datePicker.datePickerMode = modeDatePicker;
-    datePicker.hidden = NO;
-    [viewDatePicker addSubview:datePicker];
+    self.datePicker.datePickerMode = modeDatePicker;
+    self.datePicker.hidden = NO;
+    [viewDatePicker addSubview:self.datePicker];
     
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
     {
-        [datePicker setFrame:CGRectMake(0, 0, 300, 200)];
+        [self.datePicker setFrame:CGRectMake(0, 0, 300, 200)];
         [viewDatePicker setFrame:CGRectMake(0, 0, 300, 200)];
     }
-    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
-    {
+    
         
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil
-                                                                                 message:@"\n\n\n\n\n\n\n\n\n\n"
-                                                                          preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil
+                                                                             message:@"\n\n\n\n\n\n\n\n\n\n"
+                                                                      preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    // if ipad
+    alertController.popoverPresentationController.sourceView = self.btnDate;
+    alertController.popoverPresentationController.sourceRect = CGRectMake(self.btnDate.bounds.size.width - 100, 22, 1, 1);
+    //////
+    
+    
+    [alertController.view addSubview:viewDatePicker];
+    
+    
+    UIAlertAction *doneAction = [UIAlertAction actionWithTitle:@"Done" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
+                                 {
+                                     //Detect particular click by tag and do some thing here
+                                     
+                                     [self setSelectedDateInField];
+                                     NSLog(@"OK action");
+                                     
+                                 }];
+    [alertController addAction:doneAction];
+    
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action)
+                                   {
+                                       NSLog(@"Cancel action");
+                                   }];
+    
+    
+    [alertController addAction:cancelAction];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
         
-        // if ipad
-        alertController.popoverPresentationController.sourceView = self.btnDate;
-        alertController.popoverPresentationController.sourceRect = CGRectMake(self.btnDate.bounds.size.width - 100, 22, 1, 1);
-        //////
-        
-        
-        [alertController.view addSubview:viewDatePicker];
-        
-        
-        UIAlertAction *doneAction = [UIAlertAction actionWithTitle:@"Done" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
-                                     {
-                                         //Detect particular click by tag and do some thing here
-                                         
-                                         [self setSelectedDateInField];
-                                         NSLog(@"OK action");
-                                         
-                                     }];
-        [alertController addAction:doneAction];
-        
-        
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action)
-                                       {
-                                           NSLog(@"Cancel action");
-                                       }];
-        
-        
-        [alertController addAction:cancelAction];
-        
-        [self presentViewController:alertController animated:YES completion:nil];
-        
-        
-    }
-    else
-    {
-
-        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"\n\n\n\n\n\n\n\n\n\n" delegate:nil cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Done" otherButtonTitles:nil, nil];
-        [actionSheet addSubview:viewDatePicker];
-        [actionSheet showInView:self.view];
-        
-    }
 }
 
 
 -(void)setSelectedDateInField
 {
-    NSLog(@"date :: %@",datePicker.date.description);
+    NSLog(@"date :: %@", self.datePicker.date.description);
     
     
     //set Date formatter
@@ -272,7 +260,7 @@
     [formatter1 setDateFormat:@"MM/dd/YYYY"];
     
     
-    NSString *strSelectedDate = [formatter1 stringFromDate:datePicker.date];
+    NSString *strSelectedDate = [formatter1 stringFromDate:self.datePicker.date];
     [self.btnDate setTitle:strSelectedDate forState:UIControlStateNormal];
     
     
@@ -347,7 +335,7 @@
     [AudioPlayer playButtonEffectSound];
     [self.view endEditing:YES];
     
-    if (m_bAvailableGPS == NO) {
+    if (self.m_bAvailableGPS == NO) {
         [self showDefaultAlert:@"Connetion Error." message:@"Cannot get your location!"];
         return;
     }
@@ -356,22 +344,22 @@
     progressHUD.mode = MBProgressHUDModeIndeterminate;
 //    progressHUD.dimBackground = YES;
      
-    [geocoder reverseGeocodeLocation:currentLocation completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
+    [self.geocoder reverseGeocodeLocation:self.currentLocation completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
         
         if (error == nil && [placemarks count] > 0)
         {
-            placemark = [placemarks lastObject];
+            self.placemark = [placemarks lastObject];
             
             //NSString *latitude, *longitude, *state, *country;
             
-            m_strLatitude = [NSString stringWithFormat:@"%f", currentLocation.coordinate.latitude];
-            m_strLongitude = [NSString stringWithFormat:@"%f", currentLocation.coordinate.longitude];
+            self.m_strLatitude = [NSString stringWithFormat:@"%f", self.currentLocation.coordinate.latitude];
+            self.m_strLongitude = [NSString stringWithFormat:@"%f", self.currentLocation.coordinate.longitude];
 
-            m_strState = placemark.administrativeArea;
-            m_strCountry = placemark.country;
-            m_strCity = placemark.locality;
+            self.m_strState = self.placemark.administrativeArea;
+            self.m_strCountry = self.placemark.country;
+            self.m_strCity = self.placemark.locality;
             
-            NSLog(@"%@, %@, %@", m_strCity, m_strState, m_strCountry);
+            NSLog(@"%@, %@, %@", self.m_strCity, self.m_strState, self.m_strCountry);
             
             [self showAddress];
             
@@ -389,9 +377,9 @@
 
 -(void)showAddress
 {
-    self.txtCountry.text = m_strCountry;
-    self.txtState.text = m_strState;
-    self.txtCity.text = m_strCity;
+    self.txtCountry.text = self.m_strCountry;
+    self.txtState.text = self.m_strState;
+    self.txtCity.text = self.m_strCity;
 }
 
 
@@ -406,20 +394,12 @@
 
 -(void)showDefaultAlert:(NSString*)title message:(NSString*)message
 {
-    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
-    {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
                                                               handler:^(UIAlertAction * action) {}];
         
         [alert addAction:defaultAction];
         [self presentViewController:alert animated:YES completion:nil];
-    }
-    else
-    {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [alert show];
-    }
     
 }
 

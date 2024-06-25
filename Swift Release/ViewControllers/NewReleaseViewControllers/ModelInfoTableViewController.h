@@ -10,21 +10,28 @@
 #import <CoreLocation/CoreLocation.h>
 #import "NewReleaseViewController.h"
 
-@interface ModelInfoTableViewController : UITableViewController <UIActionSheetDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, CLLocationManagerDelegate>
+@interface ModelInfoTableViewController : UITableViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, CLLocationManagerDelegate>
 {
-    UIDatePicker *datePicker;
-    CLLocationManager *locationManager;
-    
-    CLLocation *currentLocation;
-    
-    NSString *m_strLatitude, *m_strLongitude, *m_strStreetAddress, *m_strCity, *m_strState, *m_strCountry, *m_strPostalCode;
-    
     BOOL m_bEnableLocation;
 }
 
 @property BOOL b_isChild;
 
+@property (strong, nonatomic) UIDatePicker *datePicker;
+@property (strong, nonatomic) CLLocationManager *locationManager;
 
+@property (strong, nonatomic) CLLocation *currentLocation;
+
+@property (strong, nonatomic) NSString *m_strLatitude;
+@property (strong, nonatomic) NSString *m_strLongitude;
+@property (strong, nonatomic) NSString *m_strStreetAddress;
+@property (strong, nonatomic) NSString *m_strCity;
+@property (strong, nonatomic) NSString *m_strState;
+@property (strong, nonatomic) NSString *m_strCountry;
+@property (strong, nonatomic) NSString *m_strPostalCode;
+
+@property (strong, nonatomic) CLGeocoder *geocoder;
+@property (strong, nonatomic) CLPlacemark *placemark;
 //////////// Input Fields //////////////////////////
 
 @property (weak, nonatomic) IBOutlet UIImageView *imgPhoto;

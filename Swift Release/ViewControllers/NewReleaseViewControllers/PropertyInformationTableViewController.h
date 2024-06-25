@@ -9,15 +9,24 @@
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
 
-@interface PropertyInformationTableViewController : UITableViewController <UIActionSheetDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, CLLocationManagerDelegate>
+@interface PropertyInformationTableViewController : UITableViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, CLLocationManagerDelegate>
 {
-    CLLocationManager *locationManager;
-    CLLocation *currentLocation;
-    
-    NSString *m_strLatitude, *m_strLongitude, *m_strStreetAddress, *m_strCity, *m_strState, *m_strCountry, *m_strPostalCode;
-    
     BOOL m_bEnableLocation;
 }
+
+@property (strong, nonatomic) CLLocationManager *locationManager;
+@property (strong, nonatomic) CLLocation *currentLocation;
+
+@property (strong, nonatomic) NSString *m_strLatitude;
+@property (strong, nonatomic) NSString *m_strLongitude;
+@property (strong, nonatomic) NSString *m_strStreetAddress;
+@property (strong, nonatomic) NSString *m_strCity;
+@property (strong, nonatomic) NSString *m_strState;
+@property (strong, nonatomic) NSString *m_strCountry;
+@property (strong, nonatomic) NSString *m_strPostalCode;
+
+@property (strong, nonatomic) CLGeocoder *geocoder;
+@property (strong, nonatomic) CLPlacemark *placemark;
 
 // Outlets of Input Fields..
 @property (weak, nonatomic) IBOutlet UIImageView *imgPhoto;

@@ -15,10 +15,7 @@
 #import "AudioPlayer.h"
 
 @interface PropertyInformationTableViewController ()
-{
-    CLGeocoder *geocoder;
-    CLPlacemark *placemark;
-}
+
 @end
 
 @implementation PropertyInformationTableViewController
@@ -141,42 +138,33 @@
     [AudioPlayer playButtonEffectSound];
     [self.view endEditing:YES];
     
-    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
-    {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Select a Photo" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Select a Photo" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    // if ipad
+    alert.popoverPresentationController.sourceView = self.btnCamera;
+    alert.popoverPresentationController.sourceRect = CGRectMake(self.btnCamera.bounds.size.width/2.0f, self.btnCamera.bounds.size.height/2.0f, 1, 1);
+    ///
+    
+    UIAlertAction *cameraAction = [UIAlertAction actionWithTitle:@"Take a Photo" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSLog(@"Take a Photo");
         
-        // if ipad
-        alert.popoverPresentationController.sourceView = self.btnCamera;
-        alert.popoverPresentationController.sourceRect = CGRectMake(self.btnCamera.bounds.size.width/2.0f, self.btnCamera.bounds.size.height/2.0f, 1, 1);
-        ///
+        [self takePhoto];
         
-        UIAlertAction *cameraAction = [UIAlertAction actionWithTitle:@"Take a Photo" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            NSLog(@"Take a Photo");
-            
-            [self takePhoto];
-            
-        }];
-        [alert addAction:cameraAction];
-        
-        UIAlertAction *galleryAction = [UIAlertAction actionWithTitle:@"Get From Photo Library" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            NSLog(@"Get from a photo library");
-            [self selectPhoto];
-        }];
-        [alert addAction:galleryAction];
-        
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action)
-                                       {
-                                           NSLog(@"Cancel action");
-                                       }];
-        [alert addAction:cancelAction];
-        [self presentViewController:alert animated:YES completion:nil];
-    }
-    else
-    {
-        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Select a Photo" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Take a Photo", @"Get From Photo Library", nil];
-        
-        [actionSheet showInView:self.view];
-    }
+    }];
+    [alert addAction:cameraAction];
+    
+    UIAlertAction *galleryAction = [UIAlertAction actionWithTitle:@"Get From Photo Library" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSLog(@"Get from a photo library");
+        [self selectPhoto];
+    }];
+    [alert addAction:galleryAction];
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action)
+                                   {
+                                       NSLog(@"Cancel action");
+                                   }];
+    [alert addAction:cancelAction];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (IBAction)onLocation:(id)sender
@@ -193,24 +181,24 @@
     progressHUD.mode = MBProgressHUDModeIndeterminate;
 //    progressHUD.dimBackground = YES;
     
-    [geocoder reverseGeocodeLocation:currentLocation completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
+    [self.geocoder reverseGeocodeLocation:self.currentLocation completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
         
         if (error == nil && [placemarks count] > 0)
         {
-            placemark = [placemarks lastObject];
+            self.placemark = [placemarks lastObject];
             
             //NSString *latitude, *longitude, *state, *country;
             
-            m_strLatitude = [NSString stringWithFormat:@"%f", currentLocation.coordinate.latitude];
-            m_strLongitude = [NSString stringWithFormat:@"%f", currentLocation.coordinate.longitude];
+            self.m_strLatitude = [NSString stringWithFormat:@"%f", self.currentLocation.coordinate.latitude];
+            self.m_strLongitude = [NSString stringWithFormat:@"%f", self.currentLocation.coordinate.longitude];
             
-            m_strStreetAddress = placemark.subLocality;
-            m_strState = placemark.administrativeArea;
-            m_strCity = placemark.locality;
-            m_strCountry = placemark.country;
-            m_strPostalCode = placemark.postalCode;
+            self.m_strStreetAddress = self.placemark.subLocality;
+            self.m_strState = self.placemark.administrativeArea;
+            self.m_strCity = self.placemark.locality;
+            self.m_strCountry = self.placemark.country;
+            self.m_strPostalCode = self.placemark.postalCode;
             
-            NSLog(@"%@, %@, %@", m_strCountry, m_strState, placemark.thoroughfare);
+            NSLog(@"%@, %@, %@", self.m_strCountry, self.m_strState, self.placemark.thoroughfare);
             
             [self showAddress];
             
@@ -289,31 +277,24 @@
 
 -(void)showAddress
 {
-    self.txtAddress.text = m_strStreetAddress;
-    self.txtCity.text = m_strCity;
-    self.txtState.text = m_strState;
-    self.txtCountry.text = m_strCountry;
-    self.txtZipCode.text = m_strPostalCode;
+    self.txtAddress.text = self.m_strStreetAddress;
+    self.txtCity.text = self.m_strCity;
+    self.txtState.text = self.m_strState;
+    self.txtCountry.text = self.m_strCountry;
+    self.txtZipCode.text = self.m_strPostalCode;
     
-    [g_propertyRelease setPropertyDescription:g_propertyRelease.strProperty_description Photo:g_propertyRelease.dataProperty_photo Address:m_strStreetAddress City:m_strCity State:m_strState Country:m_strCountry ZipCode:m_strPostalCode];
+    [g_propertyRelease setPropertyDescription:g_propertyRelease.strProperty_description Photo:g_propertyRelease.dataProperty_photo Address:self.m_strStreetAddress City:self.m_strCity State:self.m_strState Country:self.m_strCountry ZipCode:self.m_strPostalCode];
     
 }
 
 // show alert
 -(void)showDefaultAlert:(NSString*)title message:(NSString*)message
 {
-    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
-    {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:nil];
-        [alert addAction:defaultAction];
-        [self presentViewController:alert animated:YES completion:nil];
-    }
-    else
-    {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [alert show];
-    }
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *defaultAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:nil];
+    [alert addAction:defaultAction];
+    [self presentViewController:alert animated:YES completion:nil];
+
 }
 
 
@@ -321,25 +302,25 @@
 
 -(void)startGeoLocation
 {
-    geocoder = [[CLGeocoder alloc] init];
-    if (locationManager == nil)
+    self.geocoder = [[CLGeocoder alloc] init];
+    if (self.locationManager == nil)
     {
-        locationManager = [[CLLocationManager alloc] init];
-        locationManager.delegate = self;
-        locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
+        self.locationManager = [[CLLocationManager alloc] init];
+        self.locationManager.delegate = self;
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
     }
     
-    [locationManager requestAlwaysAuthorization];
-    [locationManager startUpdatingLocation];
+    [self.locationManager requestAlwaysAuthorization];
+    [self.locationManager startUpdatingLocation];
 }
 
 #pragma mark - CLLocationManagerDelegate
 
 -(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations
 {
-    currentLocation = [locations lastObject];
+    self.currentLocation = [locations lastObject];
     
-    NSLog(@"%f %f", currentLocation.coordinate.longitude, currentLocation.coordinate.latitude);
+    NSLog(@"%f %f", self.currentLocation.coordinate.longitude, self.currentLocation.coordinate.latitude);
     
     m_bEnableLocation = YES;
     // Turn off the location manager to save power.

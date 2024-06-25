@@ -20,15 +20,13 @@
 
 @implementation ReleaseTypeViewController
 
-@synthesize m_arrTitles;
-@synthesize m_arrCustomTexts;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    m_arrTitles = [[NSMutableArray alloc] init];
-    [m_arrTitles addObject:@"Standard"];
+    self.m_arrTitles = [[NSMutableArray alloc] init];
+    [self.m_arrTitles addObject:@"Standard"];
 
     SettingViewController *settingViewController = (SettingViewController*)self.navigationController.parentViewController;
     settingViewController.lblTitle.text = @"Release Type";
@@ -53,10 +51,10 @@
     self.contentWidth.constant = screenSize.width;
     self.contentHeight.constant = screenSize.height;
     
-    m_arrCustomTexts = [DBManager getCustomTexts];
-    for (CustomText *customText in m_arrCustomTexts)
+    self.m_arrCustomTexts = [DBManager getCustomTexts];
+    for (CustomText *customText in self.m_arrCustomTexts)
     {
-        [m_arrTitles addObject:customText.title];
+        [self.m_arrTitles addObject:customText.title];
     }
     
     
@@ -67,7 +65,7 @@
         [self.btnReleaseType setTitle:strTitle forState:UIControlStateNormal];
         self.txtCustomTextTitle.text = strTitle;
         
-        for (CustomText *customTextInfo in m_arrCustomTexts)
+        for (CustomText *customTextInfo in self.m_arrCustomTexts)
         {
             if ([customTextInfo.title isEqualToString:strTitle])
             {
@@ -100,7 +98,7 @@
         return strLegalText;
     }
     
-    for (CustomText *customText in m_arrCustomTexts)
+    for (CustomText *customText in self.m_arrCustomTexts)
     {
         NSString *strContent = customText.content;
         if ([strTitle isEqualToString:customText.title])
@@ -158,11 +156,11 @@
 {
     [AudioPlayer playButtonEffectSound];
     
-    [ActionSheetStringPicker showPickerWithTitle:@"Title" rows:m_arrTitles initialSelection:0 doneBlock:^(ActionSheetStringPicker *picker, NSInteger selectedIndex, id selectedValue)
+    [ActionSheetStringPicker showPickerWithTitle:@"Title" rows:self.m_arrTitles initialSelection:0 doneBlock:^(ActionSheetStringPicker *picker, NSInteger selectedIndex, id selectedValue)
     {
-        [self.btnReleaseType setTitle:m_arrTitles[selectedIndex] forState:UIControlStateNormal];
-        self.txtCustomTextTitle.text = m_arrTitles[selectedIndex];
-        self.txtCustomText.text = [self getContentFromTitle:m_arrTitles[selectedIndex]];
+        [self.btnReleaseType setTitle:self.m_arrTitles[selectedIndex] forState:UIControlStateNormal];
+        self.txtCustomTextTitle.text = self.m_arrTitles[selectedIndex];
+        self.txtCustomText.text = [self getContentFromTitle:self.m_arrTitles[selectedIndex]];
         
     } cancelBlock:^(ActionSheetStringPicker *picker) {
         
@@ -183,20 +181,12 @@
     }
     else
     {
-        if([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
-        {
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"error" message:@"You cannot delete standard legal text." preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
-                                                                  handler:^(UIAlertAction * action) {}];
-            
-            [alert addAction:defaultAction];
-            [self presentViewController:alert animated:YES completion:nil];
-        }
-        else
-        {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"error" message:@"You cannot delete standard legal text." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-            [alert show];
-        }
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"error" message:@"You cannot delete standard legal text." preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
+                                                              handler:^(UIAlertAction * action) {}];
+        
+        [alert addAction:defaultAction];
+        [self presentViewController:alert animated:YES completion:nil];
     }
     
 }

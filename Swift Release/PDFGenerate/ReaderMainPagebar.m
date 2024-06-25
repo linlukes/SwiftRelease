@@ -612,32 +612,27 @@
     
     if (g_releaseType == MergeType)
     {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"Can not edit this release" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [alert show];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"Can not edit this release" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+        [alert addAction:okAction];
+        
+        [self.superViewController presentViewController:alert animated:YES completion:nil];
         return;
     }
     
-    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
-    {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"You are about to edit this signed release. Any edit requires all parties involved to sign again." preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *acceptAction = [UIAlertAction actionWithTitle:@"Accept" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action)
-                                        {
-                                            UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-                                            NewReleaseViewController *controller = [mainStoryboard instantiateViewControllerWithIdentifier:@"NewReleaseViewController"];
-                                            g_isNew = NO;
-                                            [self.superViewController.navigationController pushViewController:controller animated:YES];
-                                            NSLog(@"Accept action");
-                                        }];
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
-        [alert addAction:acceptAction];
-        [alert addAction:cancelAction];
-        [self.superViewController presentViewController:alert animated:YES completion:nil];
-    }
-    else
-    {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:@"You are about to edit this signed release. Any edit requires all parties involved to sign again." delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:@"Accept", nil];
-        [alert show];
-    }
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"You are about to edit this signed release. Any edit requires all parties involved to sign again." preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *acceptAction = [UIAlertAction actionWithTitle:@"Accept" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action)
+                                    {
+                                        UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+                                        NewReleaseViewController *controller = [mainStoryboard instantiateViewControllerWithIdentifier:@"NewReleaseViewController"];
+                                        g_isNew = NO;
+                                        [self.superViewController.navigationController pushViewController:controller animated:YES];
+                                        NSLog(@"Accept action");
+                                    }];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
+    [alert addAction:acceptAction];
+    [alert addAction:cancelAction];
+    [self.superViewController presentViewController:alert animated:YES completion:nil];
 }
 
 

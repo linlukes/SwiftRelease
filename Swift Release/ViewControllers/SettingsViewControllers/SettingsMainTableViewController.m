@@ -27,7 +27,6 @@ int g_settingIndex = 0;
 
 @implementation SettingsMainTableViewController
 
-@synthesize arrLanguages;
 
 
 - (void)viewDidLoad {
@@ -36,7 +35,7 @@ int g_settingIndex = 0;
     settingViewController = (SettingViewController*)self.navigationController.parentViewController;
     [self setNavTitle:@"Settings"];
     
-    arrLanguages = @[@"English", @"Spanish", @"Russian", @"German", @"Italian", @"French", @"Finnish", @"Portuguese", @"Danish", @"Chinese", @"Korean"];
+    self.arrLanguages = @[@"English", @"Spanish", @"Russian", @"German", @"Italian", @"French", @"Finnish", @"Portuguese", @"Danish", @"Chinese", @"Korean"];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -193,8 +192,8 @@ int g_settingIndex = 0;
 -(void)showReleaseLanguagesPicker
 {
     
-    [ActionSheetStringPicker showPickerWithTitle:@"Languages" rows:arrLanguages initialSelection:1 doneBlock:^(ActionSheetStringPicker *picker, NSInteger selectedIndex, id selectedValue) {
-        self.lblLanguage.text = arrLanguages[selectedIndex];
+    [ActionSheetStringPicker showPickerWithTitle:@"Languages" rows:self.arrLanguages initialSelection:1 doneBlock:^(ActionSheetStringPicker *picker, NSInteger selectedIndex, id selectedValue) {
+        self.lblLanguage.text = self.arrLanguages[selectedIndex];
     } cancelBlock:^(ActionSheetStringPicker *picker) {
         
     } origin:self.lblLanguage];

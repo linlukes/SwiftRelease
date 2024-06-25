@@ -183,15 +183,15 @@
         {
             case 0:
                 cell.imgIcon.image = [UIImage imageNamed:@"customize_fields_blue"];
-                [dicCutomizeFields setValue:arrOptions[0] forKey:cell.lblTitle.text];
+                [self.dicCutomizeFields setValue:arrOptions[0] forKey:cell.lblTitle.text];
                 break;
             case 1:
                 cell.imgIcon.image = [UIImage imageNamed:@"settings_optionalField.png"];
-                [dicCutomizeFields setValue:arrOptions[1] forKey:cell.lblTitle.text];
+                [self.dicCutomizeFields setValue:arrOptions[1] forKey:cell.lblTitle.text];
                 break;
             case 2:
                 cell.imgIcon.image = [UIImage imageNamed:@"delete_dark"];
-                [dicCutomizeFields setValue:arrOptions[2] forKey:cell.lblTitle.text];
+                [self.dicCutomizeFields setValue:arrOptions[2] forKey:cell.lblTitle.text];
                 break;
             default:
                 break;
@@ -223,20 +223,12 @@
 
 -(void)showDefaultAlert:(NSString*)title message:(NSString*)message
 {
-    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
-    {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
-                                                              handler:^(UIAlertAction * action) {}];
-        
-        [alert addAction:defaultAction];
-        [self presentViewController:alert animated:YES completion:nil];
-    }
-    else
-    {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [alert show];
-    }
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
+                                                          handler:^(UIAlertAction * action) {}];
+    
+    [alert addAction:defaultAction];
+    [self presentViewController:alert animated:YES completion:nil];
     
 }
 

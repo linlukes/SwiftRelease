@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "SignatureViewController.h"
 
-@interface PhotographerDetailsTableViewController : UITableViewController <UIActionSheetDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, SignDelegate>
+@interface PhotographerDetailsTableViewController : UITableViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, SignDelegate>
 
 @property (strong, nonatomic) NSString *strSignDate;
 

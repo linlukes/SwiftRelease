@@ -815,34 +815,26 @@
 #ifdef DEBUGX
     NSLog(@"%s", __FUNCTION__);
 #endif
-    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
-    {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:@"Are you sure delete?" preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction* okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
-            NSLog(@"Ok button clicked: %@", document.fileName);
-            
-            if ([DBManager removeData:document.fileName])
-            {
-                [AudioPlayer playDeleteEffectSound];
-                [self tappedInToolbar:toolbar doneButton:button];
-            }
-            
-        }];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:@"Are you sure delete?" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction* okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+        NSLog(@"Ok button clicked: %@", document.fileName);
         
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-            NSLog(@"Cancel button clicked");
-            
-        }];
+        if ([DBManager removeData:document.fileName])
+        {
+            [AudioPlayer playDeleteEffectSound];
+            [self tappedInToolbar:toolbar doneButton:button];
+        }
         
-        [alert addAction:okAction];
-        [alert addAction:cancelAction];
-        [self presentViewController:alert animated:YES completion:nil];
-    }
-    else
-    {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"Are you sure delete?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil, nil];
-        [alert show];
-    }
+    }];
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        NSLog(@"Cancel button clicked");
+        
+    }];
+    
+    [alert addAction:okAction];
+    [alert addAction:cancelAction];
+    [self presentViewController:alert animated:YES completion:nil];
     
 }
 
@@ -1036,34 +1028,15 @@
 #pragma mark - show standard alert with message
 -(void)showAlertView:(NSString *)message
 {
-    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
-    {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:message preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
         
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-            
-        }];
-        
-        [alert addAction:cancelAction];
-        [self presentViewController:alert animated:YES completion:nil];
-    }
-    else
-    {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:message delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [alert show];
-    }
-}
+    }];
+    
+    [alert addAction:cancelAction];
+    [self presentViewController:alert animated:YES completion:nil];
 
-#pragma mark - alert view delegate
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (buttonIndex == 1) {
-        NSLog(@"OK button clicked");
-        if ([DBManager removeData:document.fileName])
-        {
-            [self tappedInToolbar:nil doneButton:nil];
-        }
-    }
 }
 
 

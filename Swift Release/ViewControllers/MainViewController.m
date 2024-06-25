@@ -24,18 +24,10 @@
 @interface MainViewController ()
 {
     BOOL isHiddenSearchBar;
-    
-    NSInteger selectedRow;
-    NSArray *listOfPaths;
-    DataModel *m_mergeModel;
 }
 @end
 
 @implementation MainViewController
-
-@synthesize arrDataModels;
-@synthesize arrFilterModels;
-@synthesize selectedDataModel;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -56,7 +48,7 @@
 //    [self.tableView addGestureRecognizer:swipRecognizer];
     
     m_actionStyle = NoneStyle;
-    selectedRow = arrFilterModels.count+1;
+    self.selectedRow = self.arrFilterModels.count + 1;
     
     g_mergeRelease = [[DataModel alloc] init];
     
@@ -81,8 +73,8 @@
 -(void)loadData
 {
     
-    arrDataModels = [[NSMutableArray alloc] init];
-    arrFilterModels = [[NSMutableArray alloc] init];
+    self.arrDataModels = [[NSMutableArray alloc] init];
+    self.arrFilterModels = [[NSMutableArray alloc] init];
     
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate] ;
     NSManagedObjectContext *context = [appDelegate managedObjectContext];
@@ -102,7 +94,7 @@
     {
         Model *model = arrModels[i];
         DataModel *dataModel = [[DataModel alloc] initWithModel:model];
-        [arrDataModels addObject:dataModel];
+        [self.arrDataModels addObject:dataModel];
     }
     
     // get property data
@@ -114,7 +106,7 @@
     {
         Property *property = arrProperties[i];
         DataModel *dataModel = [[DataModel alloc] initWithProperty:property];
-        [arrDataModels addObject:dataModel];
+        [self.arrDataModels addObject:dataModel];
     }
     
     // get property data
@@ -126,10 +118,10 @@
     {
         Merge *merge = arrMerges[i];
         DataModel *dataModel = [[DataModel alloc] initWithMerge:merge];
-        [arrDataModels addObject:dataModel];
+        [self.arrDataModels addObject:dataModel];
     }
     
-    arrFilterModels = [arrDataModels mutableCopy];
+    self.arrFilterModels = [self.arrDataModels mutableCopy];
     
 }
 
@@ -161,7 +153,7 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return arrFilterModels.count;
+    return self.arrFilterModels.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -176,7 +168,7 @@
     cell.imgPhoto.layer.cornerRadius = imgWidth / 2.0f;
     cell.imgPhoto.clipsToBounds = YES;
     
-    DataModel *dataModel = arrFilterModels[row];
+    DataModel *dataModel = self.arrFilterModels[row];
     
     cell.imgPhoto.image = [UIImage imageWithData:dataModel.imgPhoto];
     
@@ -214,7 +206,7 @@
         }];
     }
     
-    if (m_actionStyle == MergeStyle && row != selectedRow)
+    if (m_actionStyle == MergeStyle && row != self.selectedRow)
     {
         [UIView animateWithDuration:0.3f animations:^{
             cell.widthContraint.constant = 80.0f;
@@ -237,7 +229,7 @@
         return;
     }
     NSInteger row = [indexPath row];
-    DataModel *dataModel = arrFilterModels[row];
+    DataModel *dataModel = self.arrFilterModels[row];
     NSString *strFileName = dataModel.strFileName;
     switch (dataModel.releaseType)
     {
@@ -276,14 +268,14 @@
         
         NSInteger row = [indexPath row];
                     
-        DataModel *dataModel = arrFilterModels[row];
+        DataModel *dataModel = self.arrFilterModels[row];
                     
         if ([DBManager removeData:dataModel.strFileName])
         {
             [AudioPlayer playDeleteEffectSound];
             
-            [arrDataModels removeObject:dataModel];
-            [arrFilterModels removeObject:dataModel];
+            [self.arrDataModels removeObject:dataModel];
+            [self.arrFilterModels removeObject:dataModel];
                         
             [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
                         
@@ -471,21 +463,21 @@
 // show search datas....
 -(void)showSearchDatas:(NSString*)str
 {
-    arrFilterModels = [[NSMutableArray alloc] init];
+    self.arrFilterModels = [[NSMutableArray alloc] init];
     
     str = [str lowercaseString];
     
-    for (DataModel* dataModel in arrDataModels)
+    for (DataModel* dataModel in self.arrDataModels)
     {
         if ([[dataModel.strTitle lowercaseString] containsString:str])
         {
-            [arrFilterModels addObject:dataModel];
+            [self.arrFilterModels addObject:dataModel];
         }
     }
     
     if ([str isEqualToString:@""])
     {
-        arrFilterModels = [arrDataModels mutableCopy];
+        self.arrFilterModels = [self.arrDataModels mutableCopy];
     }
     
     NSString *strSortKey = self.btnDate.titleLabel.text;
@@ -507,7 +499,7 @@
 {
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"strDate" ascending:NO];
     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
-    arrFilterModels = [[arrFilterModels sortedArrayUsingDescriptors:sortDescriptors] mutableCopy];
+    self.arrFilterModels = [[self.arrFilterModels sortedArrayUsingDescriptors:sortDescriptors] mutableCopy];
 
     [self.tableView reloadData];
 
@@ -517,7 +509,7 @@
 {
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"strTitle" ascending:YES];
     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
-    arrFilterModels = [[arrFilterModels sortedArrayUsingDescriptors:sortDescriptors] mutableCopy];
+    self.arrFilterModels = [[self.arrFilterModels sortedArrayUsingDescriptors:sortDescriptors] mutableCopy];
     
     [self.tableView reloadData];
 }
@@ -526,7 +518,7 @@
 {
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"releaseType" ascending:YES];
     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
-    arrFilterModels = [[arrFilterModels sortedArrayUsingDescriptors:sortDescriptors] mutableCopy];
+    self.arrFilterModels = [[self.arrFilterModels sortedArrayUsingDescriptors:sortDescriptors] mutableCopy];
     
     [self.tableView reloadData];
 
@@ -551,9 +543,9 @@
         NSIndexPath* indexPath = [self.tableView indexPathForRowAtPoint:touchPoint];
         NSInteger row = [indexPath row];
         
-        selectedRow = row;
+        self.selectedRow = row;
         
-        selectedDataModel = arrFilterModels[row];
+        self.selectedDataModel = self.arrFilterModels[row];
         
         [self.tableView reloadData];
 
@@ -566,60 +558,53 @@
     [AudioPlayer playButtonEffectSound];
     
     m_actionStyle = NoneStyle;
-    selectedRow = arrFilterModels.count + 1;
+    self.selectedRow = self.arrFilterModels.count + 1;
     UIButton *btnMerge = (UIButton*)sender;
     NSInteger row = btnMerge.tag;
     
-    DataModel *secondDataModel = arrFilterModels[row];
+    DataModel *secondDataModel = self.arrFilterModels[row];
 
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
     NSString *documentDirectory = [paths objectAtIndex:0];
-    NSString *firstPath = [documentDirectory stringByAppendingPathComponent:selectedDataModel.strFileName];
+    NSString *firstPath = [documentDirectory stringByAppendingPathComponent:self.selectedDataModel.strFileName];
     NSString *secondPath = [documentDirectory stringByAppendingPathComponent:secondDataModel.strFileName];
     
     NSArray *strSeparateArray = [[NSArray alloc] init];
-    strSeparateArray = [selectedDataModel.strFileName componentsSeparatedByString:@".pdf"];
+    strSeparateArray = [self.selectedDataModel.strFileName componentsSeparatedByString:@".pdf"];
     NSString *strFirstFileTitle = [strSeparateArray objectAtIndex:0];
     strSeparateArray = [secondDataModel.strFileName componentsSeparatedByString:@".pdf"];
     NSString *strSecondFileTitle = [strSeparateArray objectAtIndex:0];
     
     NSString *strMergeTitle = [NSString stringWithFormat:@"%@,%@", strFirstFileTitle, strSecondFileTitle];
-    listOfPaths = @[firstPath, secondPath];
+    self.listOfPaths = @[firstPath, secondPath];
 
-    m_mergeModel = [[DataModel alloc] init];
-    m_mergeModel.releaseType = MergeType;
-    m_mergeModel.strFileName = [NSString stringWithFormat:@"%@.pdf", strMergeTitle];
-    m_mergeModel.strTitle = [NSString stringWithFormat:@"%@, %@", selectedDataModel.strTitle, secondDataModel.strTitle];
-    m_mergeModel.strDescription = [NSString stringWithFormat:@"%@, %@", selectedDataModel.strDescription, secondDataModel.strDescription];
-    m_mergeModel.imgPhoto = selectedDataModel.imgPhoto;
+    self.m_mergeModel = [[DataModel alloc] init];
+    self.m_mergeModel.releaseType = MergeType;
+    self.m_mergeModel.strFileName = [NSString stringWithFormat:@"%@.pdf", strMergeTitle];
+    self.m_mergeModel.strTitle = [NSString stringWithFormat:@"%@, %@", self.selectedDataModel.strTitle, secondDataModel.strTitle];
+    self.m_mergeModel.strDescription = [NSString stringWithFormat:@"%@, %@", self.selectedDataModel.strDescription, secondDataModel.strDescription];
+    self.m_mergeModel.imgPhoto = self.selectedDataModel.imgPhoto;
 
     
-    NSString *strMessage = [NSString stringWithFormat:@"Are you sure you want merge %@ into %@?", secondDataModel.strTitle, selectedDataModel.strTitle];
+    NSString *strMessage = [NSString stringWithFormat:@"Are you sure you want merge %@ into %@?", secondDataModel.strTitle, self.selectedDataModel.strTitle];
     
-    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
-    {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:strMessage preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction* okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
-            [self mergePDF:listOfPaths withMergeModel:m_mergeModel];
-            listOfPaths = @[];
-            [self loadData];
-            [self.tableView reloadData];
-        }];
-        
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-            listOfPaths = @[];
-            [self.tableView reloadData];
-        }];
-        
-        [alert addAction:okAction];
-        [alert addAction:cancelAction];
-        [self presentViewController:alert animated:YES completion:nil];
-    }
-    else
-    {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:strMessage delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil, nil];
-        [alert show];
-    }
+    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:strMessage preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction* okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+        [self mergePDF:self.listOfPaths withMergeModel:self.m_mergeModel];
+        self.listOfPaths = @[];
+        [self loadData];
+        [self.tableView reloadData];
+    }];
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        self.listOfPaths = @[];
+        [self.tableView reloadData];
+    }];
+    
+    [alert addAction:okAction];
+    [alert addAction:cancelAction];
+    [self presentViewController:alert animated:YES completion:nil];
     
 }
 
@@ -666,29 +651,12 @@
     CGPDFContextClose(writeContext);
     CGContextRelease(writeContext);
 
-    [DBManager saveMergeData:m_mergeModel];
+    [DBManager saveMergeData:self.m_mergeModel];
 //    [DBManager updateFileName:selectedDataModel.strFileName newFileName:fileName];
-    selectedDataModel.strFileName = fileName;
+    self.selectedDataModel.strFileName = fileName;
 }
 
-#pragma mark - alertview delegate
-- (void)alertView:(UIAlertView *)d clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    switch (buttonIndex) {
-        case 0:
-            // cancel button
-            break;
-        case 1:
-            [self mergePDF:listOfPaths withMergeModel:m_mergeModel];
-            [self loadData];
-            [self.tableView reloadData];
-            break;
-        default:
-            break;
-    }
-    listOfPaths = @[];
-    [self.tableView reloadData];
-}
+
 
 #pragma mark - 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(nullable id)sender

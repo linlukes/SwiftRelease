@@ -17,7 +17,7 @@ typedef enum{
     MergeStyle,
 }ActionStyle;
 
-@interface MainViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, UIAlertViewDelegate, ReaderViewControllerDelegate>
+@interface MainViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, ReaderViewControllerDelegate>
 {
     ActionStyle m_actionStyle;
     
@@ -28,6 +28,10 @@ typedef enum{
 @property (nonatomic, strong) NSMutableArray *arrFilterModels;
 
 @property (nonatomic, strong) DataModel *selectedDataModel;
+
+@property (nonatomic, assign) NSInteger selectedRow;
+@property (nonatomic, strong) NSArray *listOfPaths;
+@property (nonatomic, strong) DataModel *m_mergeModel;
 
 @property (weak, nonatomic) IBOutlet UIView *searchView;
 @property (weak, nonatomic) IBOutlet UITextField *txtSearch;

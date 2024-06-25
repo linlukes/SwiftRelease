@@ -46,7 +46,7 @@
 
 @interface ReaderViewController : UIViewController <UIScrollViewDelegate, UIGestureRecognizerDelegate, MFMailComposeViewControllerDelegate,
 													ReaderMainToolbarDelegate, ReaderMainPagebarDelegate, ReaderContentViewDelegate,
-													ThumbsViewControllerDelegate, UIAlertViewDelegate, PopupDelegate>
+													ThumbsViewControllerDelegate,  PopupDelegate>
 {
 @private // Instance variables
 
